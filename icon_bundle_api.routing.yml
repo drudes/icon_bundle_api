@@ -1,5 +1,5 @@
 icon_bundle_api.overview:
-  path: 'admin/config/icons/overview'
+  path: '/admin/config/icons/overview'
   defaults:
     _title: 'Icon Bundles'
     _controller: '\Drupal\icon_bundle_api\Controller\IconBundleController::plugins'

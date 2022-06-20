@@ -1,8 +1,7 @@
+administer icon bundles:
+  title: 'Administer Icon Bundles'
 administer icons:
   title: 'Administer Icons'
-  description: >
-    Grants selected roles full administrative permissions for all aspects of
-    the Icon API. It supersedes all permissions below.
 view icons:
   title: 'View Icons'
   description: >
