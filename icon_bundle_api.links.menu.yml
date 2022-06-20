@@ -1,0 +1,5 @@
+icon_bundle_api.config:
+  title: 'Icon Bundles'
+  route_name: icon_bundle_api.overview
+  parent: system.admin_config_content
+  description: 'Manage all the Icon bundles'

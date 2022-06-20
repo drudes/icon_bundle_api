@@ -1,0 +1,6 @@
+name: Icon Bundle API
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+description: Provides Icon integration through installed icon bundles.
+package: 'Icon Bundles'

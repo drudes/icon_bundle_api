@@ -1,0 +1,27 @@
+{
+    "name": "drupal/icon_bundle_api",
+    "description": "Drupal module providing Icon Bundle API",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Paweł Tomulik",
+            "homepage": "https://www.drupal.org/u/ptomulik",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "drupal/core": "^8 || ^9"
+    },
+    "autoload": {
+      "psr-4": {
+        "Drupal\\icon_bundle_api\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+       "Drupal\\Tests\\icon_bundle_api\\": "tests/src/"
+      }
+    }
+}
