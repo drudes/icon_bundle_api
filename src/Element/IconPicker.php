@@ -131,9 +131,22 @@ class IconPicker extends Details
     {
         $names = [];
         foreach (['bundle', 'icon_spec'] as $key) {
-            $names[$key] = ElementHelper::nestedElementName($element['#parents'], $key);
+            $names[$key] = static::nestedElementName($element['#parents'], $key);
         }
 
         return $names;
+    }
+
+    protected static function nestedElementName(array $parents, string $child): string
+    {
+        if (empty($parents)) {
+            return $child;
+        }
+
+        $parents[] = $child;
+
+        $root = array_shift($parents);
+
+        return $root.'['.implode('][', $parents).']';
     }
 }
