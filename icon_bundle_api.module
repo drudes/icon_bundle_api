@@ -1,11 +1,19 @@
-<?php declare(strict_types=1);
+<?php
 
-function icon_bundle_api_preprocess_details(array &$variables, string $hook): void
-{
-    $element = $variables['element'];
-    if ('icon_picker' === $element['#type'] && isset($variables['value']) && is_array($variables['value'])) {
-        unset($variables['value']);
-    }
+/**
+ * @file
+ */
+
+declare(strict_types=1);
+
+/**
+ *
+ */
+function icon_bundle_api_preprocess_details(array &$variables, string $hook): void {
+  $element = $variables['element'];
+  if ('icon_picker' === $element['#type'] && isset($variables['value']) && is_array($variables['value'])) {
+    unset($variables['value']);
+  }
 }
 
 // vim: set ft=php:

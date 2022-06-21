@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Drupal\Tests\icon_bundle_api\Unit;
 
@@ -11,15 +13,14 @@ use Tailors\PHPUnit\ImplementsInterfaceTrait;
  * @internal
  * @coversNothing
  */
-final class IconBundleManagerTest extends TestCase
-{
-    use ImplementsInterfaceTrait;
+final class IconBundleManagerTest extends TestCase {
+  use ImplementsInterfaceTrait;
 
-    /**
-     * @coversNothing
-     */
-    public function testImplementsIconBundleManagerInterface(): void
-    {
-        $this->assertImplementsInterface(IconBundleManagerInterface::class, IconBundleManager::class);
-    }
+  /**
+   * @coversNothing
+   */
+  public function testImplementsIconBundleManagerInterface(): void {
+    $this->assertImplementsInterface(IconBundleManagerInterface::class, IconBundleManager::class);
+  }
+
 }
