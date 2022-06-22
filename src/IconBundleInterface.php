@@ -7,7 +7,16 @@ namespace Drupal\icon_bundle_api;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 
 /**
- *
+ * @phpstan-type Definition array{
+ *  id: string,
+ *  label: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *  description: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *  config_route: string,
+ *  icon_picker: string,
+ *  icon_element: string,
+ *  class: class-string,
+ *  provider: string
+ * }
  */
 interface IconBundleInterface extends PluginInspectionInterface {
 

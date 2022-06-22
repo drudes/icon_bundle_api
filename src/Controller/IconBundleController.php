@@ -11,8 +11,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Renders plugins of Icons.
+ *
+ * @phpstan-type Row array<string,array>
+ * @phpstan-type Header array<int,string>
  */
-class IconBundleController extends ControllerBase {
+final class IconBundleController extends ControllerBase {
   /**
    * The icons bundle manager.
    *
@@ -32,12 +35,21 @@ class IconBundleController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('plugin.manager.icon_bundle'));
+  public static function create(ContainerInterface $container): self {
+    return new self($container->get('plugin.manager.icon_bundle'));
   }
 
   /**
    * Renders the list of plugins for icon bundles.
+   *
+   * @return array{
+   *    overview: array{
+   *      '#theme': string,
+   *      '#header': Header,
+   *      '#rows': array<string, Row>,
+   *      '#empty': string
+   *    }
+   *  }
    */
   public function plugins(): array {
     $bundles = $this->iconBundleManager->getDefinitions();
@@ -60,6 +72,8 @@ class IconBundleController extends ControllerBase {
 
   /**
    * Builds the header row for the plugin.
+   *
+   * @return Header
    */
   public function buildHeader(): array {
     return [
@@ -74,6 +88,8 @@ class IconBundleController extends ControllerBase {
    *
    * @param \Drupal\icon_bundle_api\IconBundleManager $bundle
    *   The plugin definition.
+   *
+   * @return Row
    */
   public function buildRow($bundle): array {
     return [

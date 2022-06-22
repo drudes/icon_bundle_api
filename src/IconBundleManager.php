@@ -10,7 +10,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\icon_bundle_api\Annotation\IconBundle;
 
 /**
+ * @phpstan-import-type Definition from IconBundleInterface IconBundleDefinition
  *
+ * @method array<string,IconBundleDefinition> getDefinitions()
  */
 class IconBundleManager extends DefaultPluginManager implements IconBundleManagerInterface {
 
