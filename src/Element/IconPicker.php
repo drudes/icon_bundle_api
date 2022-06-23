@@ -7,7 +7,6 @@ namespace Drupal\icon_bundle_api\Element;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Details;
-use Drupal\icon_bundle_api\IconBundleManager;
 
 /**
  * @RenderElement("icon_picker")
@@ -125,7 +124,6 @@ class IconPicker extends Details {
       '#tree'   => TRUE,
     ];
 
-//--    $icon_bundles = IconBundleManager::getIconBundles();
     $icon_bundles = \Drupal::service('plugin.manager.icon_bundle')->getDefinitions();
 
     $icon_spec_wrapper_id = implode('-', $element['#parents']) . '-icon_spec-wrapper';

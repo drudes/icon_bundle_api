@@ -46,4 +46,5 @@ class IconBundleManager extends DefaultPluginManager implements IconBundleManage
     $this->alterInfo('icon_bundle_info');
     $this->setCacheBackend($cache_backend, 'icon_bundle_plugins');
   }
+
 }
