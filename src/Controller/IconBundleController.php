@@ -12,8 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Renders plugins of Icons.
  *
+ * @phpsatn-import-type Definition from IconBundleInterface as IconBundleDefinition
  * @phpstan-type Row array<string,array>
- * @phpstan-type Header array<int,string>
+ * @phpstan-type Header Drupal\Core\StringTranslation\TranslatableMarkup[]
  */
 final class IconBundleController extends ControllerBase {
   /**
@@ -47,7 +48,7 @@ final class IconBundleController extends ControllerBase {
    *      '#theme': string,
    *      '#header': Header,
    *      '#rows': array<string, Row>,
-   *      '#empty': string
+   *      '#empty': \Drupal\Core\StringTranslation\TranslatableMarkup
    *    }
    *  }
    */
@@ -86,12 +87,12 @@ final class IconBundleController extends ControllerBase {
   /**
    * Builds the row for the icon bundle plugin.
    *
-   * @param \Drupal\icon_bundle_api\IconBundleManager $bundle
+   * @phpstan-param IconBundleDefinition $bundle
    *   The plugin definition.
    *
-   * @return Row
+   * @phpstan-return Row
    */
-  public function buildRow($bundle): array {
+  public function buildRow(array $bundle): array {
     return [
       'bundle' => [
         'data' => [
