@@ -12,9 +12,39 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Renders plugins of Icons.
  *
- * @phpsatn-import-type Definition from IconBundleInterface as IconBundleDefinition
- * @phpstan-type Row array<string,array>
- * @phpstan-type Header Drupal\Core\StringTranslation\TranslatableMarkup[]
+ * @phpstan-import-type IconBundleDefinition from \Drupal\icon_bundle_api\IconBundleInterface
+ *
+ * @phpstan-type OperationsLinks array{
+ *  edit: array{
+ *    title: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *    url: \Drupal\Core\Url,
+ *  }
+ * }
+ *
+ * @phpstan-type TableRowArray array{
+ *  bundle: array{
+ *    data: array{
+ *      '#markup': string,
+ *    }
+ *  },
+ *  bundle_machine: array{
+ *    data: array{
+ *      '#markup': string,
+ *    }
+ *  },
+ *  operations: array{
+ *    data: array{
+ *      '#type': string,
+ *      '#links': OperationsLinks,
+ *    }
+ *  },
+ * }
+ *
+ * @phpstan-type TableHeaderArray array{
+ *  0: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *  1: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ *  2: \Drupal\Core\StringTranslation\TranslatableMarkup,
+ * }
  */
 final class IconBundleController extends ControllerBase {
   /**
@@ -43,11 +73,11 @@ final class IconBundleController extends ControllerBase {
   /**
    * Renders the list of plugins for icon bundles.
    *
-   * @return array{
+   * @phpstan-return array{
    *    overview: array{
    *      '#theme': string,
-   *      '#header': Header,
-   *      '#rows': array<string, Row>,
+   *      '#header': TableHeaderArray,
+   *      '#rows': array<string, TableRowArray>,
    *      '#empty': \Drupal\Core\StringTranslation\TranslatableMarkup
    *    }
    *  }
@@ -74,7 +104,7 @@ final class IconBundleController extends ControllerBase {
   /**
    * Builds the header row for the plugin.
    *
-   * @return Header
+   * @phpstan-return TableHeaderArray
    */
   public function buildHeader(): array {
     return [
@@ -90,21 +120,24 @@ final class IconBundleController extends ControllerBase {
    * @phpstan-param IconBundleDefinition $bundle
    *   The plugin definition.
    *
-   * @phpstan-return Row
+   * @phpstan-return TableRowArray
    */
   public function buildRow(array $bundle): array {
+    $markup = [
+      'id' => '<span>' . $bundle['id'] . '</span>',
+      'label' => '<b>' . $bundle['label'] . '</b>',
+      'description' => '<div class="icon-bundle-description">' . $bundle['description'] . '</div>',
+    ];
+
     return [
       'bundle' => [
         'data' => [
-          '#type'   => 'markup',
-          '#prefix' => '<b>' . $bundle['label'] . '</b>',
-          '#suffix' => '<div class="icon-bundle-description">' . $bundle['description'] . '</div>',
+          '#markup' => $markup['label'] . $markup['description'],
         ],
       ],
       'bundle_machine' => [
         'data' => [
-          '#type'   => 'markup',
-          '#prefix' => '<span>' . $bundle['id'] . '</span>',
+          '#markup' => $markup['id'],
         ],
       ],
       'operations' => [
