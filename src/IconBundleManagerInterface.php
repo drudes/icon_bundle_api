@@ -4,24 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\icon_bundle_api;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
+
 /**
  *
  */
-interface IconBundleManagerInterface {
-
-  /**
-   *
-   */
-  public static function getIconBundleManagerService();
-
-  /**
-   *
-   */
-  public static function getIconBundles();
-
-  /**
-   *
-   */
-  public static function getIconBundle(string $name);
-
+interface IconBundleManagerInterface extends PluginManagerInterface {
 }

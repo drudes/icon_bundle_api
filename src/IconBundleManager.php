@@ -27,6 +27,8 @@ class IconBundleManager extends DefaultPluginManager implements IconBundleManage
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   *
+   * @phpstan-param \Traversable<string,string> $namespaces
    */
   public function __construct(
         \Traversable $namespaces,
@@ -44,30 +46,4 @@ class IconBundleManager extends DefaultPluginManager implements IconBundleManage
     $this->alterInfo('icon_bundle_info');
     $this->setCacheBackend($cache_backend, 'icon_bundle_plugins');
   }
-
-  /**
-   *
-   */
-  public static function getIconBundleManagerService() {
-    return \Drupal::service('plugin.manager.icon_bundle');
-  }
-
-  /**
-   * Returns the installed Icon bundles.
-   */
-  public static function getIconBundles() {
-    $bundle_manager = self::getIconBundleManagerService();
-
-    return $bundle_manager->getDefinitions();
-  }
-
-  /**
-   *
-   */
-  public static function getIconBundle(string $name) {
-    $bundles = self::getIconBundles();
-
-    return $bundles[$name];
-  }
-
 }

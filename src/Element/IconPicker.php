@@ -12,32 +12,13 @@ use Drupal\icon_bundle_api\IconBundleManager;
 /**
  * @RenderElement("icon_picker")
  *
- * @phpstan-type DetailsGetInfoRetval array{
- *  '#open': boolean,
- *  '#summary_attributes': array{},
- *  '#value': null,
- *  '#process': callable[],
- *  '#pre_render': callable[],
- *  '#theme_wrappers': string[],
- * }
- *
- * @phpstan-type GetInfoRetval array{
- *  '#open': boolean,
- *  '#input': boolean,
- *  '#summary_attributes': array{},
- *  '#process': callable[],
- *  '#pre_render': callable[],
- *  '#theme_wrappers': string[],
- *  '#value_callback': callable,
- * }
- *
- * @phpstan-type BundlesOptionsArray array<string,\Drupal\Core\StringTranslation\TranslatableMarkup>
+ * @phpstan-type SelectOptions array<string,\Drupal\Core\StringTranslation\TranslatableMarkup>
  *
  * @phpstan-type BundleArray array{
  *    '#type': 'select',
  *    '#name': string,
  *    '#default_value': string,
- *    '#options': BundlesOptionsArray,
+ *    '#options': SelectOptions,
  *    '#ajax': array{
  *      callback: callable,
  *      event: 'change',
@@ -65,16 +46,28 @@ use Drupal\icon_bundle_api\IconBundleManager;
  *  '#parents': string[],
  *  '#bundle'?: array{
  *    '#default_value'?: string,
+ *    '#parents': string[],
  *  },
  *  '#icon_spec'?: array{
  *    '#default_value'?: array{},
  *    '#prefix'?: string,
  *    '#suffix'?: string,
+ *    '#parents': string[],
  *  },
  * }
  *
  * @phpstan-type ProcessIconPickerRetval array{
  *  '#parents': string[],
+ *  '#bundle'?: array{
+ *    '#default_value'?: string,
+ *    '#parents': string[],
+ *  },
+ *  '#icon_spec'?: array{
+ *    '#default_value'?: array{},
+ *    '#prefix'?: string,
+ *    '#suffix'?: string,
+ *    '#parents': string[],
+ *  },
  *  '#access': bool,
  *  '#title': \Drupal\Core\StringTranslation\TranslatableMarkup,
  *  '#tree': bool,
@@ -82,33 +75,33 @@ use Drupal\icon_bundle_api\IconBundleManager;
  *  icon_spec: IconSpecArray,
  * }
  *
- * @phpstan-type GetDefatulValuesElement array{
- *  'bundle#'?: array{'#default_value'?: string},
- *  'icon_spec#'?: array{'#default_value'?: array{}},
+ * @phpstan-type GetDefaultValuesElement array{
+ *  '#bundle'?: array{'#default_value'?: string},
+ *  '#icon_spec'?: array{'#default_value'?: array{}},
  * }
  *
- * @phstan-type DefaultValuesRetval array{
+ * @phpstan-type GetDefaultValuesRetval array{
  *  bundle: string,
  *  icon_spec: array{}
  * }
  *
- * @phpstan-type ValueCallbackElement array{
- * }
+ * @phpstan-type ValueCallbackElement GetDefaultValuesElement
  * @phpstan-type ValueCallbackInput false|array{}
+ * @phpstan-type ValueCallbackRetval GetDefaultValuesRetval|array{}
  *
- * @phpstan-method static GetInfoRetval getInfo()
- * @phpstan-method static ProcessIconPickerRetval processIconPicker(ProcessIconPickerElement, FormStateInterface)
- * @phpstan-method static ValueCallbackRetval valueCallback(ValueCallbackElement , ValueCallbackInput)
+ * @phpstan-type IconBundleOptionsBundleDefinition array{label:\Drupal\Core\StringTranslation\TranslatableMarkup}
+ * @phpstan-type IconBundleOptionsBundleDefinitions array<string,IconBundleOptionsBundleDefinition>
  */
 class IconPicker extends Details {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-return array<string,mixed>
    */
   public function getInfo(): array {
     $class = static::class;
 
-    /** @phpstan-var DetailsGetInfoRetval */
     $info = parent::getInfo();
     $info['#input'] = TRUE;
     $info['#open'] = TRUE;
@@ -121,6 +114,8 @@ class IconPicker extends Details {
   }
 
   /**
+   * @phpstan-param ProcessIconPickerElement $element
+   * @phpstan-return ProcessIconPickerRetval
    */
   public static function processIconPicker(array $element, FormStateInterface $form_state): array {
     $access = \Drupal::currentUser()->hasPermission('administer icons');
@@ -130,7 +125,8 @@ class IconPicker extends Details {
       '#tree'   => TRUE,
     ];
 
-    $icon_bundles = IconBundleManager::getIconBundles();
+//--    $icon_bundles = IconBundleManager::getIconBundles();
+    $icon_bundles = \Drupal::service('plugin.manager.icon_bundle')->getDefinitions();
 
     $icon_spec_wrapper_id = implode('-', $element['#parents']) . '-icon_spec-wrapper';
 
@@ -172,9 +168,14 @@ class IconPicker extends Details {
   }
 
   /**
+   * @param mixed $input
+   * @return mixed
    *
+   * @phpstan-param ValueCallbackElement $element
+   * @phpstan-param ValueCallbackInput $input
+   * @phpstan-return ValueCallbackRetval
    */
-  public static function valueCallback(array &$element, $input) {
+  public static function valueCallback(array $element, $input) {
     if (FALSE === $input) {
       return static::getDefaultValues($element);
     }
@@ -184,8 +185,11 @@ class IconPicker extends Details {
 
   /**
    * Returns the 'Icon Spec' element.
+   *
+   * @phpstan-param array<array-key,mixed> $form
+   * @phpstan-return mixed
    */
-  public static function updateIconSpec(array &$form, FormStateInterface $form_state): array {
+  public static function updateIconSpec(array &$form, FormStateInterface $form_state) {
     // $triggering_element is a first-level sub-element of the $element ($element['bundle'] in fact)
     $triggering_element = $form_state->getTriggeringElement();
 
@@ -198,6 +202,9 @@ class IconPicker extends Details {
 
   /**
    * Returns an array of options for $element['bundle']['#options'].
+   *
+   * @phpstan-param IconBundleOptionsBundleDefinitions $bundle_definitions
+   * @phpstan-return SelectOptions
    */
   protected static function iconBundleOptions(array $bundle_definitions): array {
     $options = [];
@@ -209,8 +216,8 @@ class IconPicker extends Details {
   }
 
   /**
-   * @phpstan-param GetDefatulValuesElement $element
-   * @phpstan-return DefaultValuesRetval
+   * @phpstan-param GetDefaultValuesElement $element
+   * @phpstan-return GetDefaultValuesRetval
    */
   protected static function getDefaultValues(array $element): array {
     return [
@@ -220,7 +227,8 @@ class IconPicker extends Details {
   }
 
   /**
-   *
+   * @phpstan-param array{'#parents': string[]} $element
+   * @phpstan-return array{bundle: string, icon_spec: string}
    */
   protected static function getNestedElementNames(array $element): array {
     $names = [];
@@ -232,7 +240,7 @@ class IconPicker extends Details {
   }
 
   /**
-   *
+   * @phpstan-param string[] $parents
    */
   protected static function nestedElementName(array $parents, string $child): string {
     if (empty($parents)) {

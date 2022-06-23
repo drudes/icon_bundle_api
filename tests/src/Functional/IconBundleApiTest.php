@@ -14,7 +14,7 @@ final class IconBundleApiTest extends BrowserTestBase {
   /**
    * Modules to install.
    *
-   * @var array
+   * @var string[]
    */
   protected static $modules = ['icon_bundle_api'];
 
