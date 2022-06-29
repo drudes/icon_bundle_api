@@ -59,13 +59,13 @@ use Drupal\Core\Render\Element\Details;
  *  '#parents': string[],
  *  '#bundle'?: array{
  *    '#default_value'?: string,
- *    '#parents': string[],
+ *    '#parents'?: string[],
  *  },
  *  '#icon_spec'?: array{
  *    '#default_value'?: array{},
  *    '#prefix'?: string,
  *    '#suffix'?: string,
- *    '#parents': string[],
+ *    '#parents'?: string[],
  *  },
  *  '#access': bool,
  *  '#title': \Drupal\Core\StringTranslation\TranslatableMarkup,
@@ -226,7 +226,7 @@ class IconPicker extends Details {
 
   /**
    * @phpstan-param array{'#parents': string[]} $element
-   * @phpstan-return array{bundle: string, icon_spec: string}
+   * @phpstan-return array<'bundle'|'icon_spec', string>
    */
   protected static function getNestedElementNames(array $element): array {
     $names = [];
