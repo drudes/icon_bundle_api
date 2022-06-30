@@ -14,7 +14,7 @@ use Drupal\icon_bundle_api\Annotation\IconBundle;
  *
  * @method array<string,IconBundleDefinition> getDefinitions()
  */
-class IconBundleManager extends DefaultPluginManager implements IconBundleManagerInterface {
+class IconBundleManager extends DefaultPluginManager {
 
   /**
    * Construct a new IconBundleManager object.
