@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements the hook_preprocess_HOOK() for details.
  *
- * @phpstan-param array<array-key,mixed> $variables
+ * @param array{} $variables
  */
 function icon_bundle_api_preprocess_details(array &$variables): void {
   $element = $variables['element'];
