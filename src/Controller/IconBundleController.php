@@ -83,19 +83,13 @@ final class IconBundleController extends ControllerBase {
    *  }
    */
   public function plugins(): array {
-    $bundles = $this->iconBundleManager->getDefinitions();
-
-    $data = [];
-
-    foreach ($bundles as $bundle) {
-      $data[$bundle['id']] = $this->buildRow($bundle);
-    }
-
-    $form['overview'] = [
-      '#theme'  => 'table',
-      '#header' => $this->buildHeader(),
-      '#rows'   => $data,
-      '#empty'  => $this->t('There are no Icon bundles enabled.'),
+    $form = [
+      'overview' => [
+        '#theme'  => 'table',
+        '#header' => $this->buildHeader(),
+        '#rows'   => $this->buildRows(),
+        '#empty'  => $this->t('There are no Icon bundles enabled.'),
+      ],
     ];
 
     return $form;
@@ -106,12 +100,29 @@ final class IconBundleController extends ControllerBase {
    *
    * @phpstan-return TableHeaderArray
    */
-  public function buildHeader(): array {
+  private function buildHeader(): array {
     return [
       $this->t('Bundle Name'),
       $this->t('Bundle Machine Name'),
       $this->t('Operations'),
     ];
+  }
+
+  /**
+   * Builds all the rows for the icon bundle plugins.
+   *
+   * @phpstan-return array<string, TableRowArray>
+   */
+  private function buildRows(): array {
+    $bundles = $this->iconBundleManager->getDefinitions();
+
+    $data = [];
+
+    foreach ($bundles as $bundle) {
+      $data[$bundle['id']] = $this->buildRow($bundle);
+    }
+
+    return $data;
   }
 
   /**
@@ -122,7 +133,7 @@ final class IconBundleController extends ControllerBase {
    *
    * @phpstan-return TableRowArray
    */
-  public function buildRow(array $bundle): array {
+  private function buildRow(array $bundle): array {
     $markup = [
       'id' => '<span>' . $bundle['id'] . '</span>',
       'label' => '<b>' . $bundle['label'] . '</b>',

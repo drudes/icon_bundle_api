@@ -10,11 +10,11 @@ declare(strict_types=1);
 /**
  * Implements the hook_preprocess_HOOK() for details.
  *
- * @param array{} $variables
+ * @phpstan-param array{element?: array{'#type'?:mixed}, value?: mixed} $variables
  */
 function icon_bundle_api_preprocess_details(array &$variables): void {
-  $element = $variables['element'];
-  if ('icon_picker' === $element['#type'] && isset($variables['value']) && is_array($variables['value'])) {
+  $element = $variables['element'] ?? [];
+  if ('icon_picker' === ($element['#type'] ?? null) && isset($variables['value']) && is_array($variables['value'])) {
     // The 'value', which is array needs to be removed from variables.
     // Otherwise details.html.twig will attempt to render it as a render
     // array, and will fail, because value is not renderable.

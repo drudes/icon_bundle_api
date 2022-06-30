@@ -19,7 +19,7 @@ use Drupal\Core\Render\Element\Details;
  *    '#default_value': string,
  *    '#options': SelectOptions,
  *    '#ajax': array{
- *      callback: callable,
+ *      callback: callable(array,\Drupal\Core\Form\FormStateInterface): mixed,
  *      event: 'change',
  *      'wrapper': string,
  *    },
@@ -84,6 +84,11 @@ use Drupal\Core\Render\Element\Details;
  *  icon_spec: array{}
  * }
  *
+ * @phpstan-type GetInputValuesRetval array{
+ *  bundle: string,
+ *  icon_spec: array{},
+ * }
+ *
  * @phpstan-type ValueCallbackElement GetDefaultValuesElement
  * @phpstan-type ValueCallbackInput false|array{}
  * @phpstan-type ValueCallbackRetval GetDefaultValuesRetval|array{}
@@ -129,6 +134,7 @@ class IconPicker extends Details {
     $icon_spec_wrapper_id = implode('-', $element['#parents']) . '-icon_spec-wrapper';
 
     $defaults = static::getDefaultValues($element);
+    /** @phpstan-var GetInputValuesRetval */
     $inputs = $form_state->getValue($element['#parents']);
     $values = $inputs + $defaults;
     $names = static::getNestedElementNames($element);
@@ -188,12 +194,21 @@ class IconPicker extends Details {
    * @phpstan-return mixed
    */
   public static function updateIconSpec(array &$form, FormStateInterface $form_state) {
-    // $triggering_element is a first-level sub-element of the $element ($element['bundle'] in fact)
+    // We assume, that $triggering_element is a first-level child of $element
+    // (the parameter of the processIconPicker()). Thus, $element is direct
+    // parent of $triggering_element.
     $triggering_element = $form_state->getTriggeringElement();
+
+    assert(is_array($triggering_element), 'The $triggering_element must be an array.');
+    assert(array_key_exists('#array_parents', $triggering_element), 'The $triggering_element[#array_parents] must be set.');
+    assert(is_array($triggering_element['#array_parents']), 'The $triggering_element[#array_parents] must be an array.');
 
     // Acces the $element, the one returned from $this->formElement().
     $element_parents = array_slice($triggering_element['#array_parents'] ?? [], 0, -1);
     $element = NestedArray::getValue($form, $element_parents);
+
+    assert(is_array($element), 'The $element must be an array.');
+    assert(array_key_exists('icon_spec', $element), 'The $element[icon_spec] must be set.');
 
     return $element['icon_spec'];
   }
@@ -241,7 +256,7 @@ class IconPicker extends Details {
    * @phpstan-param string[] $parents
    */
   protected static function nestedElementName(array $parents, string $child): string {
-    if (empty($parents)) {
+    if ([] === $parents) {
       return $child;
     }
 
