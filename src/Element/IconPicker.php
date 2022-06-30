@@ -18,11 +18,6 @@ use Drupal\Core\Render\Element\Details;
  *    '#name': string,
  *    '#default_value': string,
  *    '#options': SelectOptions,
- *    '#ajax': array{
- *      callback: callable(array,\Drupal\Core\Form\FormStateInterface): mixed,
- *      event: 'change',
- *      'wrapper': string,
- *    },
  *    '#title': \Drupal\Core\StringTranslation\TranslatableMarkup,
  *    '#description': \Drupal\Core\StringTranslation\TranslatableMarkup,
  *    '#empty_option': \Drupal\Core\StringTranslation\TranslatableMarkup,
@@ -31,27 +26,20 @@ use Drupal\Core\Render\Element\Details;
  * @phpstan-type IconSpecArray array{
  *    '#type': string,
  *    '#name': string,
- *    '#default_value': array{},
+ *    '#default_value': array<mixed>,
  *    '#prefix': string,
  *    '#suffix': string,
- *    '#states': array{
- *      invisible: array{
- *        array{string: array{value:''}},
- *      },
- *    },
  * }
  *
  * @phpstan-type ProcessIconPickerElement array{
  *  '#parents': string[],
  *  '#bundle'?: array{
  *    '#default_value'?: string,
- *    '#parents': string[],
  *  },
  *  '#icon_spec'?: array{
  *    '#default_value'?: array{},
  *    '#prefix'?: string,
  *    '#suffix'?: string,
- *    '#parents': string[],
  *  },
  * }
  *
@@ -59,17 +47,15 @@ use Drupal\Core\Render\Element\Details;
  *  '#parents': string[],
  *  '#bundle'?: array{
  *    '#default_value'?: string,
- *    '#parents'?: string[],
  *  },
  *  '#icon_spec'?: array{
  *    '#default_value'?: array{},
  *    '#prefix'?: string,
  *    '#suffix'?: string,
- *    '#parents'?: string[],
  *  },
  *  '#access': bool,
  *  '#title': \Drupal\Core\StringTranslation\TranslatableMarkup,
- *  '#tree': bool,
+ *  '#tree': true,
  *  bundle: BundleArray,
  *  icon_spec: IconSpecArray,
  * }
@@ -123,8 +109,8 @@ class IconPicker extends Details {
    */
   public static function processIconPicker(array $element, FormStateInterface $form_state): array {
     $access = \Drupal::currentUser()->hasPermission('administer icons');
+    $element['#access'] = $access;
     $element += [
-      '#access' => $access,
       '#title'  => t('Icon'),
       '#tree'   => TRUE,
     ];
@@ -190,7 +176,7 @@ class IconPicker extends Details {
   /**
    * Returns the 'Icon Spec' element.
    *
-   * @phpstan-param array<array-key,mixed> $form
+   * @phpstan-param array<mixed> $form
    * @phpstan-return mixed
    */
   public static function updateIconSpec(array &$form, FormStateInterface $form_state) {

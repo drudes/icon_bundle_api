@@ -20,7 +20,7 @@ final class IconBundleManagerTest extends TestCase {
    * @coversNothing
    */
   public function testImplementsIconBundleManagerInterface(): void {
-    $this->assertImplementsInterface(IconBundleManagerInterface::class, IconBundleManager::class);
+    static::assertImplementsInterface(IconBundleManagerInterface::class, IconBundleManager::class);
   }
 
 }
